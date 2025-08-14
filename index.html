@@ -15,6 +15,9 @@
       --bg2:#1a1b1e;
       --fg:#ededed;
       --fg2:#c7c7c7;
+      --muted:#9b9b9b;
+      --card: rgba(255,255,255,0.05);
+      --stroke: rgba(255,255,255,0.10);
     }
     html,body {
       height:100%;
@@ -28,42 +31,54 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      text-align:center;
-      padding: 32px 16px;
+      padding: 28px 16px 48px;
       box-sizing:border-box;
     }
     .card {
-      max-width: 680px;
+      max-width: 780px;
       width: 100%;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.10);
+      background: var(--card);
+      border: 1px solid var(--stroke);
       border-radius: 24px;
-      padding: 28px;
+      padding: 24px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.35);
-      margin: 0 auto;
     }
     .rune {
-      font-size: 10rem;
+      font-size: 9rem;
       line-height: 1;
       letter-spacing: 0.02em;
       user-select: none;
+      text-align:center;
     }
     .name {
-      font-size: 1.8rem;
-      font-weight: 700;
-      margin-top: 10px;
+      font-size: 1.9rem;
+      font-weight: 800;
+      margin-top: 6px;
+      text-align:center;
       letter-spacing: 0.02em;
     }
     .meaning {
       font-size: 1.1rem;
       color: var(--fg2);
-      margin-top: 12px;
-      line-height: 1.4;
+      margin-top: 8px;
+      text-align:center;
+    }
+    .details-title {
+      margin-top: 18px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+    ul.details {
+      margin-top: 10px;
+      margin-bottom: 0;
+      padding-left: 18px;
+      line-height: 1.45;
     }
     .hint {
-      margin-top: 20px;
+      margin-top: 18px;
       font-size: .9rem;
-      color: #9b9b9b;
+      color: var(--muted);
+      text-align:center;
     }
     .footer {
       position: fixed;
@@ -72,8 +87,9 @@
       right: 0;
       text-align: center;
       font-size: .85rem;
-      color: #9b9b9b;
+      color: var(--muted);
       opacity: .7;
+      pointer-events:none;
     }
   </style>
 </head>
@@ -83,37 +99,210 @@
       <div id="rune" class="rune">ᚠ</div>
       <div id="name" class="name">Fehu</div>
       <div id="meaning" class="meaning">bogatstvo, resursi, tok novca, pokretna imovina</div>
-      <div class="hint">Svaki put kad otvoriš aplikaciju, dobićeš tačno jednu nasumičnu runu.</div>
+      <div class="details-title">Objašnjenje</div>
+      <ul id="details" class="details">
+        <li>Ključne reči: blagostanje, energija toka, razmena.</li>
+      </ul>
+      <div class="hint">Otvaranje aplikacije uvek prikazuje <b>jednu</b> nasumičnu runu sa proširenim objašnjenjem.</div>
     </div>
   </div>
   <div class="footer">© CGI Lucid Dreams — Nasumična Elder Futhark runa</div>
 
   <script>
+  // Prošireni podaci: svaka runa ima kratko značenje (m) i listu objašnjenja (d)
   const RUNES = [
-    { s: "ᚠ", n:"Fehu", m:"bogatstvo, resursi, tok novca, pokretna imovina" },
-    { s: "ᚢ", n:"Uruz", m:"snaga, zdravlje, vitalnost, prilika za rast" },
-    { s: "ᚦ", n:"Thurisaz", m:"izazov, zaštita, katalizator promene" },
-    { s: "ᚨ", n:"Ansuz", m:"komunikacija, inspiracija, poruka, mentor" },
-    { s: "ᚱ", n:"Raidho", m:"put, ritam, redosled, putovanje" },
-    { s: "ᚲ", n:"Kenaz", m:"vatra znanja, jasnoća, veština, zanat" },
-    { s: "ᚷ", n:"Gebo", m:"dar, razmena, partnerstvo, ravnoteža davanja i primanja" },
-    { s: "ᚹ", n:"Wunjo", m:"radost, harmonija, timski duh, uspeh" },
-    { s: "ᚺ", n:"Hagalaz", m:"neočekivani lom, test, resetovanje struktura" },
-    { s: "ᚾ", n:"Nauthiz", m:"potreba, strpljenje, ograničenje koje uči" },
-    { s: "ᛁ", n:"Isa", m:"mirovanje, fokus, očuvanje energije" },
-    { s: "ᛄ", n:"Jera", m:"žetva, nagrada za trud, ciklusi vremena" },
-    { s: "ᛇ", n:"Eihwaz", m:"izdržljivost, unutrašnja osovina, transformacija" },
-    { s: "ᛈ", n:"Perthro", m:"tajna, šansa, kocka sudbine, skriveni potencijal" },
-    { s: "ᛉ", n:"Algiz", m:"zaštita, intuicija, duhovni štit" },
-    { s: "ᛋ", n:"Sowilo", m:"sunce, trijumf, životna energija" },
-    { s: "ᛏ", n:"Tiwaz", m:"pravda, disciplina, hrabrost, liderstvo" },
-    { s: "ᛒ", n:"Berkano", m:"rast, isceljenje, porođaj, negovanje" },
-    { s: "ᛖ", n:"Ehwaz", m:"kretanje, napredak, verni saveznik" },
-    { s: "ᛗ", n:"Mannaz", m:"čovek, zajednica, strategija, samospoznaja" },
-    { s: "ᛚ", n:"Laguz", m:"tok, intuicija, emocije, voda" },
-    { s: "ᛝ", n:"Inguz", m:"završetak ciklusa, plodnost, oslobađanje snage" },
-    { s: "ᛟ", n:"Othala", m:"dom, nasleđe, granice, sopstveni prostor" },
-    { s: "ᛞ", n:"Dagaz", m:"prelom, svitanje, novi početak" }
+    { s:"ᚠ", n:"Fehu", m:"bogatstvo, resursi, tok novca, pokretna imovina", d:[
+      "Ključne reči: prosperitet, razmena, zahvalnost.",
+      "Posao/kreacija: naplati vrednost rada, uskladi cene sa tržištem, fokus na keš‑flow.",
+      "Odnosi: davanje i primanje moraju teći ravnotežno, ne pretvaraj pomoć u očekivanje.",
+      "Zdravlje: energija se obnavlja kroz rutinu i ishranu; investiraj u ono što te jača.",
+      "Upozorenje: rasipanje ili blokada toka zbog vezivanja za staro.",
+      "Mini‑ritual: napiši tri stvari koje danas primiš i tri koje daruješ."
+    ]},
+    { s:"ᚢ", n:"Uruz", m:"snaga, zdravlje, vitalnost, prilika za rast", d:[
+      "Ključne reči: sirova snaga, volja, otpor.",
+      "Posao/kreacija: uzmi zahtevniji zadatak, pokaži kapacitet; telo i alat su resurs.",
+      "Odnosi: postavi zdrave granice, snaga je mirna, ne agresivna.",
+      "Zdravlje: rutina sna i kretanja; gradi izdržljivost, ne brzinu.",
+      "Upozorenje: ne troši snagu na dokazivanje.",
+      "Mini‑ritual: dubok udah 4‑7‑8, prizemljenje pre odluke."
+    ]},
+    { s:"ᚦ", n:"Thurisaz", m:"izazov, zaštita, katalizator promene", d:[
+      "Ključne reči: prag, trn, zaštitna moć.",
+      "Posao/kreacija: pre velikog koraka uradi „security pass“: rizici, ugovori, backup.",
+      "Odnosi: reci „ne“ kada osećaš pritisak; zaštita je ljubav prema sebi.",
+      "Zdravlje: čuvaj ritam, izbegni preopterećenje nervnog sistema.",
+      "Upozorenje: reaktivnost; odloži odgovor 24h ako si uzburkan.",
+      "Mini‑ritual: zamišljaj svetlosni štit oko tela pre važnog susreta."
+    ]},
+    { s:"ᚨ", n:"Ansuz", m:"komunikacija, inspiracija, poruka, mentor", d:[
+      "Ključne reči: reč, dah, znakovi.",
+      "Posao/kreacija: napiši kratak pitch; traži povratnu informaciju od autoriteta.",
+      "Odnosi: slušaj pre nego što govoriš; jasno i nežno formuliši potrebe.",
+      "Zdravlje: disaj svesno; glasnice i disajni putevi traže pažnju.",
+      "Upozorenje: konfuzne poruke; proveri kontekst pre slanja.",
+      "Mini‑ritual: tri minute svesnog disanja, pa napiši jednu stranicu toka svesti."
+    ]},
+    { s:"ᚱ", n:"Raidho", m:"put, ritam, redosled, putovanje", d:[
+      "Ključne reči: kretanje u skladu, logistika.",
+      "Posao/kreacija: podeli projekat u etape; organizuj rute i rokove.",
+      "Odnosi: dogovorite ritam viđanja/komunikacije koji svima prija.",
+      "Zdravlje: ritam sna, ishrane i kretanja je lek.",
+      "Upozorenje: haotično „jurcanje“ bez pravca.",
+      "Mini‑ritual: napiši sledeća tri koraka ka cilju, ne više."
+    ]},
+    { s:"ᚲ", n:"Kenaz", m:"vatra znanja, jasnoća, veština, zanat", d:[
+      "Ključne reči: uvid, majstorstvo, svetlo u mraku.",
+      "Posao/kreacija: produbi jednu veštinu do sjaja; pokaži „pre i posle“.",
+      "Odnosi: osvetli nesporazum mirno i konkretno; ponudi rešenje.",
+      "Zdravlje: oči, vid, držanje; odmori ekran, zagrej ramena.",
+      "Upozorenje: perfekcionizam koji guši radost stvaranja.",
+      "Mini‑ritual: 25 minuta fokus rada (Pomodoro), 5 minuta pauza uz toplo svetlo."
+    ]},
+    { s:"ᚷ", n:"Gebo", m:"dar, razmena, partnerstvo, ravnoteža", d:[
+      "Ključne reči: uzajamnost, ugovor, zahvalnost.",
+      "Posao/kreacija: ponudi jasan „value exchange“; definiši očekivanja.",
+      "Odnosi: daj bez zaduživanja; prihvati dar bez umanjivanja sebe.",
+      "Zdravlje: primi pomoć stručnjaka kad zapne; to je ulaganje, ne slabost.",
+      "Upozorenje: nejednaka razmena rađa zameranje.",
+      "Mini‑ritual: napiši pismo zahvalnosti partneru/saradniku."
+    ]},
+    { s:"ᚹ", n:"Wunjo", m:"radost, harmonija, timski duh, uspeh", d:[
+      "Ključne reči: zadovoljstvo, sklad, zajedništvo.",
+      "Posao/kreacija: slavi male pobede; kultura tima je multiplikator.",
+      "Odnosi: njeguj igre, humor i zajedničke rituale.",
+      "Zdravlje: odmori se bez krivice; radost puni baterije.",
+      "Upozorenje: potiskivanje problema zarad „mira po svaku cenu“.",
+      "Mini‑ritual: tri minute zahvalnosti + deljenje sa bliskom osobom."
+    ]},
+    { s:"ᚺ", n:"Hagalaz", m:"neočekivani lom, test, resetovanje struktura", d:[
+      "Ključne reči: grad, prekid, čišćenje.",
+      "Posao/kreacija: napravi krizni plan i backup; vrati se minimumu koji radi.",
+      "Odnosi: pauziraj prepirku; preformuliši cilj razgovora.",
+      "Zdravlje: smanji stimuluse; spavanje prioritet.",
+      "Upozorenje: otpor promeni produžava oluju.",
+      "Mini‑ritual: sređivanje jednog fiokara/direktorijuma — fizički reset."
+    ]},
+    { s:"ᚾ", n:"Nauthiz", m:"potreba, strpljenje, ograničenje koje uči", d:[
+      "Ključne reči: potreba, disciplina, vatra trenja.",
+      "Posao/kreacija: radi sa onim što imaš; fokus na suštini.",
+      "Odnosi: kaži šta ti stvarno treba; ne pretpostavljaj.",
+      "Zdravlje: rutine za stres; kratke pauze za disanje i istezanje.",
+      "Upozorenje: frustracija vodi u odlaganje; napravi mikro‑korak.",
+      "Mini‑ritual: napiši jednu realnu potrebu i jedan korak danas."
+    ]},
+    { s:"ᛁ", n:"Isa", m:"mirovanje, fokus, očuvanje energije", d:[
+      "Ključne reči: led, pauza, kristalna jasnoća.",
+      "Posao/kreacija: zaustavi „vatrogasne“ akcije; definiši jedan prioritet.",
+      "Odnosi: bolje je reći „čujem te“ nego požurivati rešenje.",
+      "Zdravlje: uspori ritam; hidracija i lagane šetnje.",
+      "Upozorenje: pasiva iz straha, ne iz mudrosti.",
+      "Mini‑ritual: 10 minuta tišine bez ekrana — samo disanje."
+    ]},
+    { s:"ᛄ", n:"Jera", m:"žetva, nagrada za trud, ciklusi vremena", d:[
+      "Ključne reči: sezona, strpljenje, kontinuitet.",
+      "Posao/kreacija: pokaži rezultate iteracija; proces rađa plod.",
+      "Odnosi: neguj odnos redovno, ne samo „kada gori“.",
+      "Zdravlje: stabilan ritam donosi rezultate bez šoka.",
+      "Upozorenje: nerealna očekivanja vremenskih okvira.",
+      "Mini‑ritual: zabeleži mali napredak svakog dana (1 rečenica)."
+    ]},
+    { s:"ᛇ", n:"Eihwaz", m:"izdržljivost, unutrašnja osovina, transformacija", d:[
+      "Ključne reči: tisa, osovina, smena faza.",
+      "Posao/kreacija: ostani uz viziju i kada tempo opadne.",
+      "Odnosi: zrela lojalnost — ne slepa; oslanjaj se na unutrašnji kompas.",
+      "Zdravlje: kičma, postura, duže istezanje.",
+      "Upozorenje: tvrdoglavost; razlikuj čvrstinu od ukočenosti.",
+      "Mini‑ritual: „drvo poza“ 60 sekundi uz mirno disanje."
+    ]},
+    { s:"ᛈ", n:"Perthro", m:"tajna, šansa, kocka sudbine, skriveni potencijal", d:[
+      "Ključne reči: pehar, igra, intuicija.",
+      "Posao/kreacija: ostavi prostor za eksperiment; testiraj hipotezu malim ulogom.",
+      "Odnosi: podeli nešto lično — autentičnost gradi bliskost.",
+      "Zdravlje: prati signale tela; dnevnikk raspoloženja.",
+      "Upozorenje: zavisnost od sreće; potrebno je i sistemsko delanje.",
+      "Mini‑ritual: povuci jednu „karte‑misao“ (ili nasumični citat) i zapiši refleksiju."
+    ]},
+    { s:"ᛉ", n:"Algiz", m:"zaštita, intuicija, duhovni štit", d:[
+      "Ključne reči: jelen, zaštita, signal opreza.",
+      "Posao/kreacija: proveri pravne aspekte, bekapuj rad.",
+      "Odnosi: čuj intuiciju — neprijatan osećaj je informacija.",
+      "Zdravlje: imunitet, granice, digitalna higijena.",
+      "Upozorenje: preuzimanje tuđih tereta.",
+      "Mini‑ritual: vizuelizuj granice kao svetlosne „grane“ iznad tebe."
+    ]},
+    { s:"ᛋ", n:"Sowilo", m:"sunce, trijumf, životna energija", d:[
+      "Ključne reči: jasnoća, snaga volje, uspeh.",
+      "Posao/kreacija: pokaži rad; vidljivost donosi prilike.",
+      "Odnosi: deli toplinu, ne „spaljuj“; uskladi ego i empatiju.",
+      "Zdravlje: vitamin D, boravak na svetlu, cirkulacija.",
+      "Upozorenje: izgaranje zbog stalnog maksimuma.",
+      "Mini‑ritual: izađi na 10 minuta sunca, postavi dnevnu nameru."
+    ]},
+    { s:"ᛏ", n:"Tiwaz", m:"pravda, disciplina, hrabrost, liderstvo", d:[
+      "Ključne reči: cilj, etika, smer.",
+      "Posao/kreacija: preuzmi odgovornost i vodi standardom, ne autoritetom.",
+      "Odnosi: pošten razgovor i jasne granice jačaju poverenje.",
+      "Zdravlje: doslednost je snaga; mali, ali svakodnevni trening.",
+      "Upozorenje: krutost u ime „principa“.",
+      "Mini‑ritual: napiši jedan princip kojim danas vodiš odluku."
+    ]},
+    { s:"ᛒ", n:"Berkano", m:"rast, isceljenje, porođaj, negovanje", d:[
+      "Ključne reči: početak, oporavak, nežnost.",
+      "Posao/kreacija: inkubiraj ideju; zaštiti rani razvoj od suviše kritika.",
+      "Odnosi: njeguj atmosferu sigurnosti i topline.",
+      "Zdravlje: regeneracija; spavanje, zeleno povrće, blagi ritmovi.",
+      "Upozorenje: prezaštićivanje koje guši rast.",
+      "Mini‑ritual: 15 minuta „digitalni off“ i topli napitak u tišini."
+    ]},
+    { s:"ᛖ", n:"Ehwaz", m:"kretanje, napredak, verni saveznik", d:[
+      "Ključne reči: konj, savezništvo, momentum.",
+      "Posao/kreacija: udruži se sa pouzdanim partnerom; podeli teret.",
+      "Odnosi: sinhronizacija tempa; vernost u delima.",
+      "Zdravlje: lagano, ali redovno kretanje; šetnje posle obroka.",
+      "Upozorenje: sumnja koja koči zajednički napredak.",
+      "Mini‑ritual: zapiši kome danas možeš biti „dobar konj“ — praktična pomoć."
+    ]},
+    { s:"ᛗ", n:"Mannaz", m:"čovek, zajednica, strategija, samospoznaja", d:[
+      "Ključne reči: identitet, uloge, saradnja.",
+      "Posao/kreacija: mapiraj uloge tima; igraj svoje snage.",
+      "Odnosi: budi iskren o granicama i vrednostima.",
+      "Zdravlje: mentalna higijena; pauze bez informacija.",
+      "Upozorenje: preterano samoposmatranje bez akcije.",
+      "Mini‑ritual: napiši jednu rečenicu „Ko sam danas kada radim X?“"
+    ]},
+    { s:"ᛚ", n:"Laguz", m:"tok, intuicija, emocije, voda", d:[
+      "Ključne reči: fluidnost, podsvesno, kreativan tok.",
+      "Posao/kreacija: pusti skicu da te vodi; iteracije preko logike.",
+      "Odnosi: validiraj emocije pre analize; voda traži posudu — dogovor.",
+      "Zdravlje: hidracija, limfa, lagano istezanje.",
+      "Upozorenje: preplavljenost; ograniči ulaz stimulusa.",
+      "Mini‑ritual: 5 minuta gledaj u vodu/tuš i „pusti“ napetost niz odvod."
+    ]},
+    { s:"ᛝ", n:"Inguz", m:"završetak ciklusa, plodnost, oslobađanje snage", d:[
+      "Ključne reči: seme, zrenje, zatvaranje.",
+      "Posao/kreacija: završetak faze pre nove; objavi MVP bez perfekcionizma.",
+      "Odnosi: proslavi završetak jedne teme; pređi u lakši mod.",
+      "Zdravlje: ciklični odmor; punjenje pre sledećeg sprinta.",
+      "Upozorenje: držanje starog semena umesto setve.",
+      "Mini‑ritual: fizički označi kraj — obriši listu, arhiviraj folder."
+    ]},
+    { s:"ᛟ", n:"Othala", m:"dom, nasleđe, granice, sopstveni prostor", d:[
+      "Ključne reči: pripadnost, teritorija, vrednosti predaka.",
+      "Posao/kreacija: zaštiti IP, potpiši ugovore, čuvaj arhivu.",
+      "Odnosi: poštuj tuđe i svoje granice doma/prostora.",
+      "Zdravlje: higijena prostora = higijena misli; prozrači i sredi.",
+      "Upozorenje: zatvorenost za novo pod izgovorom tradicije.",
+      "Mini‑ritual: uredi jedan kutak koji te „drži“ i smiruje."
+    ]},
+    { s:"ᛞ", n:"Dagaz", m:"prelom, svitanje, novi početak", d:[
+      "Ključne reči: praskozorje, uvid, kvantni skok.",
+      "Posao/kreacija: promeni pristup; mala promena menja sve.",
+      "Odnosi: nova perspektiva razrešava zastoj.",
+      "Zdravlje: reset jutarnjom rutinom; svetlo i kretanje.",
+      "Upozorenje: strah od novog — korak je manji nego što misliš.",
+      "Mini‑ritual: napiši jedan izbor koji danas menja tok 1%."
+    ]}
   ];
 
   function pickRandom() {
@@ -125,12 +314,17 @@
     document.getElementById('rune').textContent = r.s;
     document.getElementById('name').textContent = r.n;
     document.getElementById('meaning').textContent = r.m;
+    const list = document.getElementById('details');
+    list.innerHTML = "";
+    r.d.forEach(item => {
+      const li = document.createElement('li');
+      li.textContent = item;
+      list.appendChild(li);
+    });
   }
 
-  // Prikaži nasumičnu runu samo pri učitavanju (nema osvežavanja dodirom)
   window.addEventListener('DOMContentLoaded', showRune);
 
-  // Registruj service worker za offline rad
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js').catch(console.error);
