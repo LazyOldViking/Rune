@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="sr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f0f10">
+  <title>Nasumična Runa</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <style>
+    :root {
+      --bg1:#0f0f10;
+      --bg2:#1a1b1e;
+      --fg:#ededed;
+      --fg2:#c7c7c7;
+    }
+    html,body {
+      height:100%;
+      margin:0;
+      background: linear-gradient(180deg,var(--bg1),var(--bg2));
+      color: var(--fg);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Noto Sans", sans-serif;
+    }
+    .wrap {
+      min-height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding: 32px 16px;
+      box-sizing:border-box;
+    }
+    .card {
+      max-width: 680px;
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+      margin: 0 auto;
+    }
+    .rune {
+      font-size: 10rem;
+      line-height: 1;
+      letter-spacing: 0.02em;
+      user-select: none;
+    }
+    .name {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-top: 10px;
+      letter-spacing: 0.02em;
+    }
+    .meaning {
+      font-size: 1.1rem;
+      color: var(--fg2);
+      margin-top: 12px;
+      line-height: 1.4;
+    }
+    .hint {
+      margin-top: 20px;
+      font-size: .9rem;
+      color: #9b9b9b;
+    }
+    .footer {
+      position: fixed;
+      bottom: 10px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: .85rem;
+      color: #9b9b9b;
+      opacity: .7;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div id="rune" class="rune">ᚠ</div>
+      <div id="name" class="name">Fehu</div>
+      <div id="meaning" class="meaning">bogatstvo, resursi, tok novca, pokretna imovina</div>
+      <div class="hint">Svaki put kad otvoriš aplikaciju, dobićeš tačno jednu nasumičnu runu.</div>
+    </div>
+  </div>
+  <div class="footer">© CGI Lucid Dreams — Nasumična Elder Futhark runa</div>
+
+  <script>
+  const RUNES = [
+    { s: "ᚠ", n:"Fehu", m:"bogatstvo, resursi, tok novca, pokretna imovina" },
+    { s: "ᚢ", n:"Uruz", m:"snaga, zdravlje, vitalnost, prilika za rast" },
+    { s: "ᚦ", n:"Thurisaz", m:"izazov, zaštita, katalizator promene" },
+    { s: "ᚨ", n:"Ansuz", m:"komunikacija, inspiracija, poruka, mentor" },
+    { s: "ᚱ", n:"Raidho", m:"put, ritam, redosled, putovanje" },
+    { s: "ᚲ", n:"Kenaz", m:"vatra znanja, jasnoća, veština, zanat" },
+    { s: "ᚷ", n:"Gebo", m:"dar, razmena, partnerstvo, ravnoteža davanja i primanja" },
+    { s: "ᚹ", n:"Wunjo", m:"radost, harmonija, timski duh, uspeh" },
+    { s: "ᚺ", n:"Hagalaz", m:"neočekivani lom, test, resetovanje struktura" },
+    { s: "ᚾ", n:"Nauthiz", m:"potreba, strpljenje, ograničenje koje uči" },
+    { s: "ᛁ", n:"Isa", m:"mirovanje, fokus, očuvanje energije" },
+    { s: "ᛄ", n:"Jera", m:"žetva, nagrada za trud, ciklusi vremena" },
+    { s: "ᛇ", n:"Eihwaz", m:"izdržljivost, unutrašnja osovina, transformacija" },
+    { s: "ᛈ", n:"Perthro", m:"tajna, šansa, kocka sudbine, skriveni potencijal" },
+    { s: "ᛉ", n:"Algiz", m:"zaštita, intuicija, duhovni štit" },
+    { s: "ᛋ", n:"Sowilo", m:"sunce, trijumf, životna energija" },
+    { s: "ᛏ", n:"Tiwaz", m:"pravda, disciplina, hrabrost, liderstvo" },
+    { s: "ᛒ", n:"Berkano", m:"rast, isceljenje, porođaj, negovanje" },
+    { s: "ᛖ", n:"Ehwaz", m:"kretanje, napredak, verni saveznik" },
+    { s: "ᛗ", n:"Mannaz", m:"čovek, zajednica, strategija, samospoznaja" },
+    { s: "ᛚ", n:"Laguz", m:"tok, intuicija, emocije, voda" },
+    { s: "ᛝ", n:"Inguz", m:"završetak ciklusa, plodnost, oslobađanje snage" },
+    { s: "ᛟ", n:"Othala", m:"dom, nasleđe, granice, sopstveni prostor" },
+    { s: "ᛞ", n:"Dagaz", m:"prelom, svitanje, novi početak" }
+  ];
+
+  function pickRandom() {
+    return RUNES[Math.floor(Math.random() * RUNES.length)];
+  }
+
+  function showRune() {
+    const r = pickRandom();
+    document.getElementById('rune').textContent = r.s;
+    document.getElementById('name').textContent = r.n;
+    document.getElementById('meaning').textContent = r.m;
+  }
+
+  // Prikaži nasumičnu runu samo pri učitavanju (nema osvežavanja dodirom)
+  window.addEventListener('DOMContentLoaded', showRune);
+
+  // Registruj service worker za offline rad
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(console.error);
+    });
+  }
+  </script>
+</body>
+</html>
